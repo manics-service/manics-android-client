@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Manics</string>
+    <integer name="com_vk_sdk_AppId">5884450</integer>
+</resources>
