@@ -112,14 +112,13 @@ public class LoginActivity extends FragmentActivity {
         VKCallback<VKAccessToken> callback = new VKCallback<VKAccessToken>() {
             @Override
             public void onResult(VKAccessToken res) {
-                //post token to the server. return session
+                //todo post token to the server. return session
                 startChartActivity();
             }
 
             @Override
             public void onError(VKError error) {
-                // User didn't pass Authorization
-                System.out.println("sds");
+                //todo user didn't pass Authorization
             }
         };
 
@@ -129,7 +128,7 @@ public class LoginActivity extends FragmentActivity {
     }
 
     private void startChartActivity() {
-        //send request to server
+        //todo send request to the server
         boolean analytics = false;
         if (analytics) {
             startActivity(createIntent(ContentActivity.class));
@@ -141,6 +140,7 @@ public class LoginActivity extends FragmentActivity {
 
     private Intent createIntent(Class aClass) {
         Intent intent = new Intent(this, aClass);
+        //todo find a better solution if possible
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         return intent;
     }

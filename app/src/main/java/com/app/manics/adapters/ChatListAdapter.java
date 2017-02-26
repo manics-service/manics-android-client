@@ -6,10 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.app.manics.R;
 import com.app.manics.models.Chat;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -50,17 +52,31 @@ public class ChatListAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        Chat currentItem = (Chat) getItem(position);
-        viewHolder.chatTitle.setText(currentItem.getTitle());
+        Chat currentChat = (Chat) getItem(position);
+        viewHolder.chatTitle.setText(currentChat.getTitle());
+
+        if (currentChat.getTitle().equals("четверг 8:00-12:00")) {
+            System.out.println("sd");
+        }
+        //todo define the best size
+        if (currentChat.isTitleImage()) {
+            Picasso.with(context).load(currentChat.getImage200()).into(viewHolder.chatImage);
+        } else {
+            //todo magic behavior if not set image
+           viewHolder.chatImage.setImageResource(R.drawable.material);
+        }
+
         return convertView;
     }
 
 
     private class ViewHolder {
         TextView chatTitle;
+        ImageView chatImage;
 
         public ViewHolder(View view) {
-            chatTitle = (TextView)view.findViewById(R.id.chatTitle);
+            chatTitle = (TextView) view.findViewById(R.id.chatTitle);
+            chatImage = (ImageView) view.findViewById(R.id.chatImage);
         }
     }
 }
