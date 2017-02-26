@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.app.manics.R;
 
-public class ContentActivity  extends AppCompatActivity {
+public class ContentActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

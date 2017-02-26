@@ -130,7 +130,7 @@ public class LoginActivity extends FragmentActivity {
 
     private void startChartActivity() {
         //send request to server
-        boolean analytics = true;
+        boolean analytics = false;
         if (analytics) {
             startActivity(createIntent(ContentActivity.class));
             return;
