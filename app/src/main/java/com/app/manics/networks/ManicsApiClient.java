@@ -4,7 +4,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ManicsApiClient {
-    private static final String BASE_URL = "http://10.0.3.2:8080/api/v1/data/";
+    private static final String BASE_URL = "http://10.0.3.2:8080/api/v1/";
 
     private static Retrofit retrofit = null;
 

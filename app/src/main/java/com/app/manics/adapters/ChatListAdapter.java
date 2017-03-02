@@ -55,12 +55,11 @@ public class ChatListAdapter extends BaseAdapter {
         Chat currentChat = (Chat) getItem(position);
         viewHolder.chatTitle.setText(currentChat.getTitle());
 
-        if (currentChat.getTitle().equals("четверг 8:00-12:00")) {
-            System.out.println("sd");
-        }
         //todo define the best size
         if (currentChat.isTitleImage()) {
-            Picasso.with(context).load(currentChat.getImage200()).into(viewHolder.chatImage);
+            Picasso.with(context)
+                    .load(currentChat.getImage200())
+                    .into(viewHolder.chatImage);
         } else {
             //todo magic behavior if not set image
            viewHolder.chatImage.setImageResource(R.drawable.material);

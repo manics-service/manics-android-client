@@ -4,6 +4,7 @@ package com.app.manics.activities;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.widget.ListView;
 
 import com.app.manics.R;
@@ -11,6 +12,7 @@ import com.app.manics.adapters.ChatListAdapter;
 import com.app.manics.models.Chat;
 import com.app.manics.networks.ManicsApi;
 import com.app.manics.networks.ManicsApiClient;
+import com.app.manics.tool.SessionManager;
 import com.vk.sdk.VKAccessToken;
 
 import java.util.ArrayList;
@@ -38,6 +40,9 @@ public class ChatsActivity extends AppCompatActivity {
 
         ManicsApi manicsApi = ManicsApiClient.getClient().create(ManicsApi.class);
         Call<List<Chat>> call = manicsApi.getChats(VKAccessToken.currentToken().accessToken);
+
+        SessionManager sessionManager = new SessionManager(getApplicationContext());
+        Log.i(TAG, sessionManager.getSession());
 
         call.enqueue(new Callback<List<Chat>>() {
             @Override

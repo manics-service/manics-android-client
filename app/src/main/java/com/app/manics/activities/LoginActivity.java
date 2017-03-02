@@ -4,20 +4,29 @@ import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.app.manics.R;
+import com.app.manics.models.AuthInfo;
+import com.app.manics.networks.ManicsApi;
+import com.app.manics.networks.ManicsApiClient;
+import com.app.manics.tool.SessionManager;
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKCallback;
 import com.vk.sdk.VKScope;
 import com.vk.sdk.VKSdk;
 import com.vk.sdk.api.VKError;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class LoginActivity extends FragmentActivity {
 
-    private boolean isResumed = false;
+    private static final String TAG = LoginActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,20 +35,19 @@ public class LoginActivity extends FragmentActivity {
         VKSdk.wakeUpSession(this, new VKCallback<VKSdk.LoginState>() {
             @Override
             public void onResult(VKSdk.LoginState res) {
-                if (isResumed) {
-                    switch (res) {
-                        case LoggedOut:
-                            showLogin();
-                            break;
-                        case LoggedIn:
-                            startChartActivity();
-                            break;
-                        case Pending:
-                            break;
-                        case Unknown:
-                            break;
-                    }
+                switch (res) {
+                    case LoggedOut:
+                        showLogin();
+                        break;
+                    case LoggedIn:
+                        startChartActivity();
+                        break;
+                    case Pending:
+                        break;
+                    case Unknown:
+                        break;
                 }
+
             }
 
             @Override
@@ -52,7 +60,6 @@ public class LoginActivity extends FragmentActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        isResumed = true;
         if (VKSdk.isLoggedIn()) {
             startChartActivity();
         } else {
@@ -62,7 +69,6 @@ public class LoginActivity extends FragmentActivity {
 
     @Override
     protected void onPause() {
-        isResumed = false;
         super.onPause();
     }
 
@@ -81,12 +87,7 @@ public class LoginActivity extends FragmentActivity {
     public static class LoginFragment extends Fragment {
 
         private static final String[] SCOPE = new String[]{
-                VKScope.FRIENDS,
-                VKScope.WALL,
-                VKScope.PHOTOS,
-                VKScope.NOHTTPS,
-                VKScope.MESSAGES,
-                VKScope.DOCS
+                VKScope.MESSAGES
         };
 
         public LoginFragment() {
@@ -112,8 +113,26 @@ public class LoginActivity extends FragmentActivity {
         VKCallback<VKAccessToken> callback = new VKCallback<VKAccessToken>() {
             @Override
             public void onResult(VKAccessToken res) {
-                //todo post token to the server. return session
-                startChartActivity();
+                Log.d(TAG, "onActivityResult");
+                AuthInfo authInfo = new AuthInfo(res.accessToken, "VK");
+
+                ManicsApi manicsApi = ManicsApiClient.getClient().create(ManicsApi.class);
+                Call<AuthInfo> call = manicsApi.createUser(authInfo);
+
+                call.enqueue(new Callback<AuthInfo>() {
+                    @Override
+                    public void onResponse(Call<AuthInfo>call, Response<AuthInfo> response) {
+                        //todo add progress
+                        SessionManager sessionManager = new SessionManager(getApplicationContext());
+                        sessionManager.createSession(response.body().getSession());
+                        startChartActivity();
+                    }
+
+                    @Override
+                    public void onFailure(Call<AuthInfo>call, Throwable t) {
+                        Log.d(TAG, t.getMessage());
+                    }
+                });
             }
 
             @Override
